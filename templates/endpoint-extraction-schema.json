@@ -1,0 +1,204 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "API Endpoint Extraction Schema",
+  "description": "Use this schema with extract_structured_data tool to extract API endpoints from documentation",
+  "type": "object",
+  "properties": {
+    "serviceName": {
+      "type": "string",
+      "description": "Name of the API service"
+    },
+    "baseUrl": {
+      "type": "string",
+      "description": "Base URL for the API"
+    },
+    "authentication": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["bearer", "apiKey", "oauth2", "basic", "none"],
+          "description": "Type of authentication required"
+        },
+        "location": {
+          "type": "string",
+          "enum": ["header", "query", "body"],
+          "description": "Where the auth credential should be placed"
+        },
+        "parameterName": {
+          "type": "string",
+          "description": "Name of the auth parameter (e.g., 'Authorization', 'api_key')"
+        },
+        "scheme": {
+          "type": "string",
+          "description": "Auth scheme for header-based auth (e.g., 'Bearer', 'Basic')"
+        }
+      }
+    },
+    "endpoints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Unique identifier for the endpoint (snake_case)"
+          },
+          "displayName": {
+            "type": "string",
+            "description": "Human-readable name"
+          },
+          "description": {
+            "type": "string",
+            "description": "What this endpoint does"
+          },
+          "method": {
+            "type": "string",
+            "enum": ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"],
+            "description": "HTTP method"
+          },
+          "path": {
+            "type": "string",
+            "description": "API path with path parameters in curly braces (e.g., '/users/{userId}')"
+          },
+          "parameters": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Parameter name"
+                },
+                "type": {
+                  "type": "string",
+                  "description": "Data type (string, number, boolean, object, array)"
+                },
+                "required": {
+                  "type": "boolean",
+                  "description": "Whether this parameter is required"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "What this parameter does"
+                },
+                "location": {
+                  "type": "string",
+                  "enum": ["path", "query", "header", "body"],
+                  "description": "Where this parameter should be sent"
+                },
+                "default": {
+                  "description": "Default value if not provided"
+                },
+                "enum": {
+                  "type": "array",
+                  "description": "Allowed values if this is an enum"
+                },
+                "format": {
+                  "type": "string",
+                  "description": "Format hint (e.g., 'date', 'email', 'uri')"
+                }
+              },
+              "required": ["name", "type", "required", "location"]
+            }
+          },
+          "requestBody": {
+            "type": "object",
+            "properties": {
+              "contentType": {
+                "type": "string",
+                "description": "Content type (e.g., 'application/json', 'multipart/form-data')"
+              },
+              "required": {
+                "type": "boolean",
+                "description": "Whether a request body is required"
+              },
+              "schema": {
+                "type": "object",
+                "description": "JSON Schema describing the request body structure"
+              },
+              "example": {
+                "description": "Example request body"
+              }
+            }
+          },
+          "responses": {
+            "type": "object",
+            "description": "Map of status codes to response definitions",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "description": "Description of this response"
+                },
+                "contentType": {
+                  "type": "string",
+                  "description": "Response content type"
+                },
+                "schema": {
+                  "type": "object",
+                  "description": "JSON Schema describing the response structure"
+                },
+                "example": {
+                  "description": "Example response"
+                }
+              }
+            }
+          },
+          "rateLimit": {
+            "type": "object",
+            "properties": {
+              "requests": {
+                "type": "number",
+                "description": "Number of requests allowed"
+              },
+              "period": {
+                "type": "string",
+                "description": "Time period (e.g., '1m', '1h', '1d')"
+              }
+            }
+          },
+          "deprecated": {
+            "type": "boolean",
+            "description": "Whether this endpoint is deprecated"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Categories or tags for this endpoint"
+          }
+        },
+        "required": ["name", "description", "method", "path"]
+      }
+    },
+    "commonParameters": {
+      "type": "array",
+      "description": "Parameters that apply to all or many endpoints",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "location": { "type": "string" },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "rateLimit": {
+      "type": "object",
+      "properties": {
+        "default": {
+          "type": "object",
+          "properties": {
+            "requests": { "type": "number" },
+            "period": { "type": "string" }
+          }
+        }
+      }
+    }
+  },
+  "required": ["serviceName", "baseUrl", "endpoints"]
+}

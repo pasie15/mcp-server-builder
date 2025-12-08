@@ -1,0 +1,60 @@
+{
+  "mcpServers": {
+    "context7": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@upstash/context7-mcp",
+        "--api-key",
+        "your_context7_api_key_here"
+      ]
+    },
+    "hyperbrowserAI": {
+      "command": "node",
+      "args": ["path/to/hyperbrowser-mcp/dist/server.js"],
+      "env": {
+        "HYPERBROWSER_API_KEY": "your_hyperbrowser_api_key_here"
+      }
+    },
+    "perplexity": {
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@perplexity-ai/mcp-server"],
+      "env": {
+        "PERPLEXITY_API_KEY": "your_perplexity_api_key_here",
+        "PERPLEXITY_TIMEOUT_MS": "600000"
+      }
+    },
+    "github": {
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
+      "command": "cmd",
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "your_github_token_here"
+      }
+    },
+    "deepwiki": {
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "mcp-remote",
+        "https://mcp.deepwiki.com/sse"
+      ],
+      "command": "cmd",
+      "env": {}
+    },
+    "fetch": {
+      "args": [
+        "mcp-server-fetch"
+      ],
+      "command": "uvx",
+      "env": {}
+    }
+  }
+}

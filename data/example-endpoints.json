@@ -1,0 +1,358 @@
+{
+  "$schema": "../templates/endpoint-extraction-schema.json",
+  "serviceName": "ExampleAPI",
+  "baseUrl": "https://api.example.com/v1",
+  "authentication": {
+    "type": "bearer",
+    "location": "header",
+    "parameterName": "Authorization",
+    "scheme": "Bearer"
+  },
+  "commonParameters": [
+    {
+      "name": "api_version",
+      "type": "string",
+      "location": "header",
+      "description": "API version to use (defaults to latest)"
+    }
+  ],
+  "rateLimit": {
+    "default": {
+      "requests": 100,
+      "period": "1m"
+    }
+  },
+  "endpoints": [
+    {
+      "name": "get_user",
+      "displayName": "Get User",
+      "description": "Retrieves detailed information about a user by their ID",
+      "method": "GET",
+      "path": "/users/{userId}",
+      "parameters": [
+        {
+          "name": "userId",
+          "type": "string",
+          "required": true,
+          "description": "The unique identifier for the user",
+          "location": "path"
+        },
+        {
+          "name": "include",
+          "type": "string",
+          "required": false,
+          "description": "Comma-separated list of related resources to include",
+          "location": "query",
+          "enum": ["profile", "settings", "preferences"]
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "User retrieved successfully",
+          "contentType": "application/json",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "User ID"
+              },
+              "email": {
+                "type": "string",
+                "format": "email",
+                "description": "User email address"
+              },
+              "name": {
+                "type": "string",
+                "description": "User full name"
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Account creation timestamp"
+              }
+            }
+          },
+          "example": {
+            "id": "usr_123456",
+            "email": "user@example.com",
+            "name": "John Doe",
+            "created_at": "2024-01-15T10:30:00Z"
+          }
+        },
+        "404": {
+          "description": "User not found",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "tags": ["users"]
+    },
+    {
+      "name": "list_users",
+      "displayName": "List Users",
+      "description": "Returns a paginated list of all users",
+      "method": "GET",
+      "path": "/users",
+      "parameters": [
+        {
+          "name": "page",
+          "type": "number",
+          "required": false,
+          "description": "Page number for pagination",
+          "location": "query",
+          "default": 1
+        },
+        {
+          "name": "per_page",
+          "type": "number",
+          "required": false,
+          "description": "Number of items per page (max 100)",
+          "location": "query",
+          "default": 20
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "required": false,
+          "description": "Field to sort by",
+          "location": "query",
+          "enum": ["created_at", "name", "email"],
+          "default": "created_at"
+        },
+        {
+          "name": "order",
+          "type": "string",
+          "required": false,
+          "description": "Sort order",
+          "location": "query",
+          "enum": ["asc", "desc"],
+          "default": "desc"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "List of users",
+          "contentType": "application/json",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              },
+              "pagination": {
+                "type": "object",
+                "properties": {
+                  "page": { "type": "number" },
+                  "per_page": { "type": "number" },
+                  "total": { "type": "number" },
+                  "total_pages": { "type": "number" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "tags": ["users"]
+    },
+    {
+      "name": "create_user",
+      "displayName": "Create User",
+      "description": "Creates a new user account",
+      "method": "POST",
+      "path": "/users",
+      "requestBody": {
+        "contentType": "application/json",
+        "required": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "format": "email",
+              "description": "User email address"
+            },
+            "name": {
+              "type": "string",
+              "description": "User full name"
+            },
+            "password": {
+              "type": "string",
+              "description": "User password (min 8 characters)"
+            }
+          },
+          "required": ["email", "name", "password"]
+        },
+        "example": {
+          "email": "newuser@example.com",
+          "name": "Jane Smith",
+          "password": "SecurePass123!"
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "User created successfully",
+          "contentType": "application/json",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "email": { "type": "string" },
+              "name": { "type": "string" },
+              "created_at": { "type": "string" }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid request body",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": { "type": "string" },
+              "details": { "type": "array" }
+            }
+          }
+        },
+        "409": {
+          "description": "User with this email already exists"
+        }
+      },
+      "tags": ["users"]
+    },
+    {
+      "name": "update_user",
+      "displayName": "Update User",
+      "description": "Updates an existing user's information",
+      "method": "PATCH",
+      "path": "/users/{userId}",
+      "parameters": [
+        {
+          "name": "userId",
+          "type": "string",
+          "required": true,
+          "description": "The unique identifier for the user",
+          "location": "path"
+        }
+      ],
+      "requestBody": {
+        "contentType": "application/json",
+        "required": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Updated user name"
+            },
+            "email": {
+              "type": "string",
+              "format": "email",
+              "description": "Updated email address"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "User updated successfully"
+        },
+        "404": {
+          "description": "User not found"
+        }
+      },
+      "tags": ["users"]
+    },
+    {
+      "name": "delete_user",
+      "displayName": "Delete User",
+      "description": "Permanently deletes a user account",
+      "method": "DELETE",
+      "path": "/users/{userId}",
+      "parameters": [
+        {
+          "name": "userId",
+          "type": "string",
+          "required": true,
+          "description": "The unique identifier for the user",
+          "location": "path"
+        }
+      ],
+      "responses": {
+        "204": {
+          "description": "User deleted successfully"
+        },
+        "404": {
+          "description": "User not found"
+        }
+      },
+      "tags": ["users"]
+    },
+    {
+      "name": "search_users",
+      "displayName": "Search Users",
+      "description": "Searches for users matching the given query",
+      "method": "GET",
+      "path": "/users/search",
+      "parameters": [
+        {
+          "name": "q",
+          "type": "string",
+          "required": true,
+          "description": "Search query string",
+          "location": "query"
+        },
+        {
+          "name": "field",
+          "type": "string",
+          "required": false,
+          "description": "Field to search in",
+          "location": "query",
+          "enum": ["name", "email", "all"],
+          "default": "all"
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "required": false,
+          "description": "Maximum number of results to return",
+          "location": "query",
+          "default": 10
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Search results",
+          "contentType": "application/json",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "results": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              },
+              "total": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      },
+      "rateLimit": {
+        "requests": 30,
+        "period": "1m"
+      },
+      "tags": ["users", "search"]
+    }
+  ]
+}
