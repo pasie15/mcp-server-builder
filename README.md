@@ -58,6 +58,22 @@ When you have an API with documentation and want to make it available as an MCP 
 
 ### Main Documents
 
+#### [CLAUDE.md](./CLAUDE.md) 🤖 **NEW - AI Memory System**
+The comprehensive AI-optimized knowledge base (v2.0.0):
+- Complete MCP server development workflow (all 10 phases)
+- Full extraction schema with all authentication patterns
+- Complete code templates (package.json, tsconfig.json, .gitignore)
+- Authentication patterns (Bearer, API Key, OAuth2, Basic, Custom)
+- Parameter handling (path, query, body, nested, arrays, files)
+- Tool generation algorithm with step-by-step code
+- Comprehensive error handling for all HTTP status codes
+- Retry logic with exponential backoff
+- Testing and debugging guide
+- Advanced patterns (pagination, caching, batching, webhooks, streaming)
+- Troubleshooting guide with solutions
+
+**This is the definitive reference** - optimized for AI assistants and developers.
+
 #### [KNOWLEDGEBASE.md](./KNOWLEDGEBASE.md) ⭐
 The complete, detailed guide covering:
 - Web scraping tools and strategies
@@ -100,6 +116,69 @@ Detailed guide to web scraping tools:
 - Best practices
 
 **Consult this** when choosing scraping strategies.
+
+### 🎯 Claude Code Skills
+
+#### [.claude/skills/](/.claude/skills/) **NEW - Automated Workflows**
+
+Seven specialized skills that automate MCP server creation:
+
+**1. `/scrape-api-docs <api-docs-url> [service-name]`**
+- Scrapes and extracts structured endpoint data from API documentation
+- Chooses optimal scraping strategy automatically
+- Saves extracted data to `data/{service-name}-endpoints.json`
+
+**2. `/create-mcp-server <service-name> [endpoints-file]`**
+- Creates complete project structure in `mcp-servers/mcp-server-{service-name}/`
+- Initializes npm project with all dependencies
+- Copies and customizes templates
+- Performs initial build
+
+**3. `/implement-tools <service-name>`**
+- Generates tool definitions from endpoint data
+- Implements tool handlers with error handling
+- Creates TypeScript type definitions
+- Updates README with tool documentation
+
+**4. `/test-mcp-server <service-name>`**
+- Builds the project
+- Starts MCP Inspector for testing
+- Tests all tools with sample data
+- Documents test results
+
+**5. `/publish-github <service-name> [github-username]`**
+- Creates GitHub repository
+- Prepares and uploads all project files
+- Creates v1.0.0 release
+- Verifies repository setup
+
+**6. `/publish-npm <service-name>`**
+- Validates package configuration
+- Publishes to npm registry
+- Tests installation
+- Adds npm badge to README
+
+**7. `/build-mcp-server <api-docs-url> <service-name> [github-username]`** ⭐
+- **Complete end-to-end automation**
+- Executes all phases automatically
+- Scrapes → Creates → Implements → Tests → Publishes
+- Provides comprehensive final report
+
+**Example Usage:**
+```bash
+# Complete automation (recommended)
+/build-mcp-server https://docs.stripe.com/api stripe yourusername
+
+# Or step-by-step
+/scrape-api-docs https://docs.stripe.com/api stripe
+/create-mcp-server stripe
+/implement-tools stripe
+/test-mcp-server stripe
+/publish-github stripe yourusername
+/publish-npm stripe
+```
+
+See [.claude/skills/README.md](/.claude/skills/README.md) for detailed skill documentation.
 
 ### Templates
 
@@ -224,11 +303,24 @@ npx @modelcontextprotocol/inspector node dist/index.js
 ```
 MCP Server Builder/
 ├── README.md                              # This file
+├── CLAUDE.md                              # 🤖 AI-optimized knowledge base (v2.0.0)
 ├── KNOWLEDGEBASE.md                       # Complete guide ⭐
 ├── QUICK_START.md                         # Quick reference
 ├── TOOLS_REFERENCE.md                     # Web scraping tools guide
 ├── WORKFLOW.md                            # Visual workflow diagrams
 ├── .gitignore                             # Git ignore rules
+├── .claude/                               # 🤖 Claude Code configuration
+│   ├── skills/                            # Automated workflow skills
+│   │   ├── README.md                      # Skills documentation
+│   │   ├── scrape-api-docs.md             # /scrape-api-docs skill
+│   │   ├── create-mcp-server.md           # /create-mcp-server skill
+│   │   ├── implement-tools.md             # /implement-tools skill
+│   │   ├── test-mcp-server.md             # /test-mcp-server skill
+│   │   ├── publish-github.md              # /publish-github skill
+│   │   ├── publish-npm.md                 # /publish-npm skill
+│   │   └── build-mcp-server.md            # /build-mcp-server skill (all-in-one)
+│   └── agents/                            # Agent configurations
+│       └── README.md                      # Agent documentation
 ├── templates/                             # Reusable templates
 │   ├── endpoint-extraction-schema.json    # Extraction schema
 │   ├── server-template.ts                 # MCP server template
@@ -252,7 +344,21 @@ MCP Server Builder/
 
 ## 🎓 Learning Path
 
-### For Beginners
+### For AI-Assisted Development (Recommended) 🤖
+
+**Using Claude Code with Skills:**
+
+1. Read [CLAUDE.md](./CLAUDE.md) - AI-optimized knowledge base
+2. Use `/build-mcp-server <api-url> <name>` for complete automation
+3. Or use individual skills for specific phases:
+   - `/scrape-api-docs` → `/create-mcp-server` → `/implement-tools` → `/test-mcp-server` → `/publish-github` → `/publish-npm`
+4. Skills handle the entire workflow automatically
+
+**Time savings:** Build complete MCP servers in 1-4 hours with AI assistance!
+
+### For Manual Development
+
+#### For Beginners
 
 1. Read [KNOWLEDGEBASE.md](./KNOWLEDGEBASE.md) thoroughly
 2. Review [TOOLS_REFERENCE.md](./TOOLS_REFERENCE.md) to understand scraping
@@ -260,7 +366,7 @@ MCP Server Builder/
 4. Follow [QUICK_START.md](./QUICK_START.md) for your first project
 5. Use [templates/PROJECT_CHECKLIST.md](./templates/PROJECT_CHECKLIST.md) to track progress
 
-### For Experienced Developers
+#### For Experienced Developers
 
 1. Skim [KNOWLEDGEBASE.md](./KNOWLEDGEBASE.md) for an overview
 2. Use [QUICK_START.md](./QUICK_START.md) as your primary reference
@@ -390,6 +496,18 @@ This knowledgebase improves through use. When building MCP servers:
 
 ## 📝 Version History
 
+- **v2.0.0** - AI-Assisted Development System ✨ **NEW**
+  - Added CLAUDE.md - comprehensive AI-optimized knowledge base
+  - Added 7 automated skills for complete workflow automation
+  - Skills: scrape-api-docs, create-mcp-server, implement-tools, test-mcp-server, publish-github, publish-npm, build-mcp-server
+  - Complete templates (package.json, tsconfig.json, .gitignore)
+  - All authentication patterns (Bearer, API Key, OAuth2, Basic, Custom)
+  - Parameter handling for all scenarios (path, query, body, nested, arrays, files)
+  - Tool generation algorithm with step-by-step code
+  - Comprehensive error handling and retry logic
+  - Advanced patterns (pagination, caching, batching, webhooks, streaming)
+  - Debugging and troubleshooting guide
+
 - **v1.0.0** - Initial comprehensive knowledgebase
   - Complete documentation
   - Templates and checklists
@@ -446,6 +564,23 @@ This knowledgebase is provided as-is for building MCP servers. Individual MCP se
 
 **Ready to build your first MCP server?**
 
+### 🤖 With AI Assistance (Recommended):
+1. Read [CLAUDE.md](./CLAUDE.md) for comprehensive knowledge
+2. Use `/build-mcp-server <api-url> <service-name>` for complete automation
+3. Or use individual skills step-by-step
+
+### 📚 Manual Approach:
 Start with [KNOWLEDGEBASE.md](./KNOWLEDGEBASE.md) for the complete guide, or jump to [QUICK_START.md](./QUICK_START.md) if you're experienced.
 
 Happy building! 🚀
+
+---
+
+## 🆕 What's New in v2.0
+
+- **CLAUDE.md**: AI-optimized comprehensive knowledge base with all patterns, templates, and algorithms
+- **7 Automated Skills**: Complete workflow automation from scraping to publishing
+- **`/build-mcp-server`**: One command to build, test, and publish complete MCP servers
+- **Full Code Templates**: package.json, tsconfig.json, .gitignore, server template
+- **All Auth Patterns**: Bearer, API Key, OAuth2, Basic, Custom authentication
+- **Advanced Features**: Pagination, caching, batching, webhooks, streaming, retry logic
